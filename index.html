@@ -36,7 +36,8 @@
       const URL = myInput.value;
       const response = await fetch(URL);
       const data = await response.text();
-      text.innerHTML = getLineNumber(data);
+      const totalLines = countLines(data);
+      text.innerHTML = `You have ${getLineNumber(data)} of ${totalLines}`;
     });
   </script>
 </body>
