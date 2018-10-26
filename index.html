@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Count lines</title>
+</head>
+<body>
+  <h1>How many util code do you have?</h1>
+  <label>Paste your git code</label>
+  <input id="code" type="text" />
+  <button id="button">click</button>
+  <h2>Your lines are</h2>
+  <p id="text"></p>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ramda/0.25.0/ramda.min.js"></script>
+  <script>
+
+    const cleanComments = (str) => {
+      const patterns = [/\/\*(.|\n)*?\*\//gm, /^\s*?\/\/.*$/gm];
+      return patterns.reduce((acum, current) => acum.replace(current, ''), str).trim();
+    };
+
+    const cleanLines = (str) => {
+      const pattern = /^\s*[\r\n]/gm;
+      return str.replace(pattern, '').trim();
+    };
+
+    const countLines = (str) => str.split('\n').length;
+
+    const getLineNumber = R.pipe(cleanComments, cleanLines, countLines);
+
+    const mybutton = document.getElementById('button');
+    const myInput = document.getElementById('code');
+    const text = document.getElementById('text');
+
+    mybutton.addEventListener('click', async () => {
+      const URL = myInput.value;
+      const response = await fetch(URL);
+      const data = await response.text();
+      text.innerHTML = getLineNumber(data);
+    });
+  </script>
+</body>
+</html>
